@@ -39,8 +39,8 @@ namespace TSP::Model {
     Graph::~Graph() {
         auto edgeSet = this->getEdgeSet();
         for (auto edge: edgeSet) {
-            this->adjacencies[edge->getVertices()[0]]->remove(edge);
-            this->adjacencies[edge->getVertices()[1]]->remove(edge);
+            this->adjacencies[edge->getVertex(0)]->remove(edge);
+            this->adjacencies[edge->getVertex(1)]->remove(edge);
             delete edge;
         }
 
@@ -58,8 +58,8 @@ namespace TSP::Model {
     }
 
     bool Graph::hasEdge(Edge* e) {
-        int v1 = e->getVertices()[0];
-        int v2 = e->getVertices()[1];
+        int v1 = e->getVertex(0);
+        int v2 = e->getVertex(1);
 
         return this->adjacencies[v1]->findByVertex(v2) != nullptr;
     }
@@ -285,8 +285,8 @@ namespace TSP::Model {
                     continue;
                 }
 
-                int vertex1ValueInSubGraph = subGraph->vertexValue(to_string(edgeInThisGraph->getVertices()[0]));
-                int vertex2ValueInSubGraph = subGraph->vertexValue(to_string(edgeInThisGraph->getVertices()[1]));
+                int vertex1ValueInSubGraph = subGraph->vertexValue(to_string(edgeInThisGraph->getVertex(0)));
+                int vertex2ValueInSubGraph = subGraph->vertexValue(to_string(edgeInThisGraph->getVertex(1)));
 
                 if (subGraph->verticesConnect(vertex1ValueInSubGraph, vertex2ValueInSubGraph)) {
                     continue;
@@ -314,9 +314,28 @@ namespace TSP::Model {
         Graph* newGraph = new Graph(this->vertices, this->mapping);
         auto edgeSet = this->getEdgeSet();
         for (Edge* edge: edgeSet) {
-            newGraph->addEdge(edge->getVertices()[0], edge->getVertices()[1], edge->getWeight());
+            newGraph->addEdge(edge->getVertex(0), edge->getVertex(1), edge->getWeight());
         }
 
         return newGraph;
+    }
+
+    Graph *Graph::createGrid(int size) {
+        int vertices = size * size;
+        Graph* grid = new Graph(size * size);
+
+        for (int v = 0; v < vertices; v++) {
+            int col = v % size;
+
+            if (col > 0) {
+                grid->addEdge(v - 1, v, 1);
+            }
+
+            if (v >= size) {
+                grid->addEdge(v - size, v, 1);
+            }
+        }
+
+        return grid;
     }
 }

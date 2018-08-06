@@ -36,6 +36,10 @@ namespace TSP::Model {
                || (this->vertices[0] == v2 && this->vertices[2] == v1);
     }
 
+    int Edge::getVertex(int index) {
+        return this->vertices[index];
+    }
+
     int* Edge::getVertices() {
         return this->vertices;
     }

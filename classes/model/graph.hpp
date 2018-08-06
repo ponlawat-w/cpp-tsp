@@ -62,6 +62,8 @@ namespace TSP::Model {
         Graph* extractSubGraphByNames(vector<string>, bool);
 
         Graph* clone();
+
+        static Graph* createGrid(int);
     };
 
 }

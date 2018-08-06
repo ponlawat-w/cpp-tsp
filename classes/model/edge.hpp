@@ -14,6 +14,7 @@ namespace TSP::Model {
         bool connects(int);
         bool equallyConnects(Edge);
         bool sameVertices(int, int);
+        int getVertex(int);
         int* getVertices();
         int getWeight();
         int getAnotherVertex(int);
