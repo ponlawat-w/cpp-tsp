@@ -66,14 +66,6 @@ namespace TSP::FrontierZDD {
         return true;
     }
 
-    int ZddNode::hashValue(int* frontiers, int length, int hashNumber) {
-        int value = 0;
-        for (int fv = 0; fv < length; fv++) {
-            value += frontiers[fv];
-        }
-        return value % hashNumber;
-    }
-
     ZddNode* ZddNode::createRootNode(Graph* graph) {
         return new ZddNode(0, graph->getVertices());
     }

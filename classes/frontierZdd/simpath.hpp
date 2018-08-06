@@ -6,6 +6,7 @@
 #include "frontierMap.hpp"
 #include "binaryNode.hpp"
 #include "binaryTree.hpp"
+#include "zddNodeList.hpp"
 
 namespace TSP::FrontierZDD {
 
@@ -13,11 +14,9 @@ namespace TSP::FrontierZDD {
 
     class Simpath: public FrontierMap {
         BinaryTree* tree;
-        vector<ZddNode*>** nodeByLevels;
+        ZddNodeList** nodeLists;
         int origin;
         int destination;
-
-        int frontierHashNumber = 139;
 
         bool isOriginDestination(int);
         void calculate();

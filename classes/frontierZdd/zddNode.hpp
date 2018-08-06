@@ -20,7 +20,6 @@ namespace TSP::FrontierZDD {
         ZddNode* forkChild(int value);
         void addEdge(int*, int size);
         bool isEquivalent(ZddNode*, int* frontiers, int length);
-        int hashValue(int*, int size, int hashNumber);
         static ZddNode* createRootNode(Graph*);
     };
 

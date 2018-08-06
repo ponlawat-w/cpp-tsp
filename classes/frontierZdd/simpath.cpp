@@ -6,9 +6,9 @@ namespace TSP::FrontierZDD {
         this->graph = graph;
         this->origin = origin;
         this->destination = destination;
-        this->nodeByLevels = new vector<ZddNode*>*[this->edgeSize];
+        this->nodeLists = new ZddNodeList*[this->edgeSize];
         for (int e = 0; e < this->edgeSize; e++) {
-            this->nodeByLevels[e] = new vector<ZddNode*>[this->frontierHashNumber];
+            this->nodeLists[e] = new ZddNodeList();
         }
         this->tree = nullptr;
         this->calculate();
@@ -19,9 +19,9 @@ namespace TSP::FrontierZDD {
 //            delete &this->nodeByLevels[i];
 //        }
         for (int e = 0; e < this->edgeSize; e++) {
-            delete[] this->nodeByLevels[e];
+            delete this->nodeLists[e];
         }
-        delete[] this->nodeByLevels;
+        delete[] this->nodeLists;
         delete this->tree;
     }
 
@@ -76,9 +76,7 @@ namespace TSP::FrontierZDD {
 
         }
 
-        int* frontiers = this->frontiers[index];
-        int size = this->frontierSizes[index];
-        this->nodeByLevels[index][node->hashValue(frontiers, size, this->frontierHashNumber)].push_back(node);
+        this->nodeLists[index]->add(node);
 
         return node;
     }
@@ -130,17 +128,7 @@ namespace TSP::FrontierZDD {
     }
 
     ZddNode* Simpath::findEquivalentNode(ZddNode* node, int index) {
-        int* frontiers = this->frontiers[index];
-        int size = this->frontierSizes[index];
-        int hash = node->hashValue(frontiers, size, this->frontierHashNumber);
-
-        for (ZddNode* nodeInSet: this->nodeByLevels[index][hash]) {
-            if (nodeInSet->isEquivalent(node, this->frontiers[index], this->frontierSizes[index])) {
-                return nodeInSet;
-            }
-        }
-
-        return nullptr;
+        return this->nodeLists[index]->findEquivalent(node, this->frontiers[index], this->frontierSizes[index]);
     }
 
     void Simpath::printTree() {
