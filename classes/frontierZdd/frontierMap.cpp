@@ -71,12 +71,20 @@ namespace TSP::FrontierZDD {
         this->edges = this->edgeSetToArray(edgeSet);
         this->edgeSize = edgeSet.size();
 
+        this->terminalFalse = new BinaryNode(0, true);
+        this->terminalTrue = new BinaryNode(1, true);
+
         this->generateFrontiers();
     }
 
     FrontierMap::~FrontierMap() {
         for (int e = 0; e < this->edgeSize; e++) {
+//            for (int fv = 0; fv < this->frontierSizes[e]; fv++) {
+//                delete &this->frontiers[e][fv];
+//            }
+            delete[] this->edges[e];
             delete[] this->frontiers[e];
+//            delete &this->frontierSizes[e];
         }
 
         delete[] this->frontiers;

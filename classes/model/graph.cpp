@@ -111,6 +111,7 @@ namespace TSP::Model {
             this->removeEdges(vertex, v2);
         }
 
+        this->deallocateEdgesArray(edges, edgeCount);
         delete[] edges;
     }
 
@@ -240,6 +241,9 @@ namespace TSP::Model {
 
     void Graph::deallocateAdjacencyMatrix(int** adjacency) {
         for (int i = 0; i < this->vertices; i++) {
+//            for (int j = 0; j < this->vertices; j++) {
+//                delete &adjacency[i][j];
+//            }
             delete[] adjacency[i];
         }
 
@@ -294,6 +298,7 @@ namespace TSP::Model {
                 subGraph->addEdge(vertex1ValueInSubGraph, vertex2ValueInSubGraph, edgeInThisGraph->getWeight());
             }
 
+            this->deallocateEdgesArray(edges, edgeCount);
             delete[] edges;
         }
 
@@ -318,6 +323,13 @@ namespace TSP::Model {
         }
 
         return newGraph;
+    }
+
+    void Graph::deallocateEdgesArray(Edge** edges, int size) {
+        for (int e = 0; e < size; e++) {
+            delete[] edges[e];
+        }
+        delete[] edges;
     }
 
     Graph *Graph::createGrid(int size) {

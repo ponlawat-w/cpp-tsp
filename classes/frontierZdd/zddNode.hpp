@@ -10,15 +10,17 @@ namespace TSP::FrontierZDD {
 
     class ZddNode: public BinaryNode {
     public:
+        int size;
         int* degrees;
         int* components;
 
         ZddNode(int value, int size);
         ~ZddNode();
-        ZddNode* clone(int size);
-        ZddNode* forkChild(int value, int size);
+        ZddNode* clone();
+        ZddNode* forkChild(int value);
         void addEdge(int*, int size);
         bool isEquivalent(ZddNode*, int* frontiers, int length);
+        int hashValue(int*, int size, int hashNumber);
         static ZddNode* createRootNode(Graph*);
     };
 

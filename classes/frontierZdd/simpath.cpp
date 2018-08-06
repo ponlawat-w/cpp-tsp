@@ -1,19 +1,27 @@
 #include "simpath.hpp"
 
 namespace TSP::FrontierZDD {
+
     Simpath::Simpath(Graph* graph, int origin, int destination): FrontierMap(graph) {
+        this->graph = graph;
         this->origin = origin;
         this->destination = destination;
-        this->nodesByFrontiers = new set<ZddNode*>[this->edgeSize + 1];
-
-        this->terminalFalse = new BinaryNode(0, true);
-        this->terminalTrue = new BinaryNode(1, true);
-
+        this->nodeByLevels = new vector<ZddNode*>*[this->edgeSize];
+        for (int e = 0; e < this->edgeSize; e++) {
+            this->nodeByLevels[e] = new vector<ZddNode*>[this->frontierHashNumber];
+        }
+        this->tree = nullptr;
         this->calculate();
     }
 
     Simpath::~Simpath() {
-        delete[] this->nodesByFrontiers;
+//        for (int i = 0; i < this->edgeSize; i++) {
+//            delete &this->nodeByLevels[i];
+//        }
+        for (int e = 0; e < this->edgeSize; e++) {
+            delete[] this->nodeByLevels[e];
+        }
+        delete[] this->nodeByLevels;
         delete this->tree;
     }
 
@@ -22,9 +30,9 @@ namespace TSP::FrontierZDD {
     }
 
     void Simpath::calculate() {
-        ZddNode* root = ZddNode::createRootNode(this->graph);
-        this->tree = new BinaryTree(root);
-        this->traverse(root, 0);
+        ZddNode* rootNode = ZddNode::createRootNode(this->graph);
+        this->tree = new BinaryTree(rootNode);
+        this->traverse(rootNode, 0);
         cout << "\n";
     }
 
@@ -37,77 +45,83 @@ namespace TSP::FrontierZDD {
             }
 
             BinaryNode* toTerminal = this->checkTerminal(node, whichChild, index);
-
             if (toTerminal == nullptr) {
 
-//                ZddNode* tempNode = node->clone(this->graph->getVertices());
-//                if (whichChild == 1) {
-//                    tempNode->addEdge(this->edges[index]->getVertices(), this->graph->getVertices());
-//                }
-//                ZddNode* equivalentNode = this->findEquivalentNode(tempNode, index);
-//                delete tempNode;
-//
-//                if (equivalentNode == nullptr) {
-                    if (index + 1 < this->edgeSize) {
-                        ZddNode* childNode = node->forkChild(index + 1, this->graph->getVertices());
-                        node->setChild(whichChild, this->traverse(childNode, index + 1));
-                    }
-//                } else {
-//                    node->setChild(whichChild, equivalentNode);
-//                }
+                ZddNode* tempNode = node->clone();
+                if (whichChild == 1) {
+                    tempNode->addEdge(this->edges[index]->getVertices(), this->graph->getVertices());
+                }
 
-            } else if (toTerminal->terminates()) {
+                ZddNode* equivalentNode = this->findEquivalentNode(tempNode, index + 1);
+                if (equivalentNode == nullptr) {
+                    if (index + 1 < this->edgeSize) {
+                        ZddNode* childNode = tempNode->forkChild(index + 1);
+                        delete tempNode;
+                        node->setChild(whichChild, this->traverse(childNode, index + 1));
+                    } else {
+                        delete tempNode;
+                    }
+                } else {
+                    delete tempNode;
+                    node->setChild(whichChild, equivalentNode);
+                }
+
+            } else {
                 node->setChild(whichChild, toTerminal);
             }
 
             if (index < 10) {
                 cout << "\b";
             }
+
         }
 
-//        this->nodesByFrontiers[index + 1].insert(node);
+        int* frontiers = this->frontiers[index];
+        int size = this->frontierSizes[index];
+        this->nodeByLevels[index][node->hashValue(frontiers, size, this->frontierHashNumber)].push_back(node);
 
         return node;
     }
 
     BinaryNode* Simpath::checkTerminal(ZddNode* node, int whichChild, int index) {
-        if (index >= this->edgeSize) {
-            return this->terminalFalse;
-        }
+        ZddNode* tempNode = node->clone();
 
         Edge* edge = this->edges[index];
         int* edgeVertices = edge->getVertices();
 
         if (whichChild == 1) {
-            if (node->components[edgeVertices[0]] == node->components[edgeVertices[1]]) {
+            if (tempNode->components[edgeVertices[0]] == tempNode->components[edgeVertices[1]]) {
+                delete tempNode;
                 return this->terminalFalse;
             }
-
-            node->addEdge(edgeVertices, this->graph->getVertices());
+            tempNode->addEdge(edgeVertices, this->graph->getVertices());
         }
 
-        for (int i: {0, 1}) {
-            int v = edgeVertices[i];
-            int degree = node->degrees[v];
-            bool inFrontier = this->inFrontier(v, index + 1);
+        for (int vertex: {edgeVertices[0], edgeVertices[1]}) {
+            int degree = tempNode->degrees[vertex];
+            bool inFrontier = this->inFrontier(vertex, index + 1);
 
-            if (this->isOriginDestination(v)) {
+            if (this->isOriginDestination(vertex)) {
                 if (degree > 1 || (!inFrontier && degree != 1)) {
+                    delete tempNode;
                     return this->terminalFalse;
                 }
             } else {
                 if (degree > 2 || (!inFrontier && degree != 2 && degree != 0)) {
+                    delete tempNode;
                     return this->terminalFalse;
                 }
             }
         }
 
+        delete tempNode;
         return index < this->edgeSize - 1 ? nullptr : this->terminalTrue;
     }
 
     bool Simpath::inFrontier(int vertex, int index) {
-        for (int vf = 0; vf < this->frontierSizes[index]; vf++) {
-            if (this->frontiers[index][vf] == vertex) {
+        int size = this->frontierSizes[index];
+        for (int fv = 0; fv < size; fv++) {
+            if (this->frontiers[index][fv] == vertex) {
                 return true;
             }
         }
@@ -116,8 +130,12 @@ namespace TSP::FrontierZDD {
     }
 
     ZddNode* Simpath::findEquivalentNode(ZddNode* node, int index) {
-        for (ZddNode* nodeInSet: this->nodesByFrontiers[index]) {
-            if (node->isEquivalent(nodeInSet, this->frontiers[index], this->frontierSizes[index])) {
+        int* frontiers = this->frontiers[index];
+        int size = this->frontierSizes[index];
+        int hash = node->hashValue(frontiers, size, this->frontierHashNumber);
+
+        for (ZddNode* nodeInSet: this->nodeByLevels[index][hash]) {
+            if (nodeInSet->isEquivalent(node, this->frontiers[index], this->frontierSizes[index])) {
                 return nodeInSet;
             }
         }

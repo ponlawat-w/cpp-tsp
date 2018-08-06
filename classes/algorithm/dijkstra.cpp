@@ -79,7 +79,7 @@ namespace TSP::Algorithm {
                 int newValue = currentNode->value == -1 ? edge->getWeight() : currentNode->value + edge->getWeight();
                 this->nodes[nextVertex]->compareAndApply(currentNode->vertex, newValue);
             }
-            delete[] connectingEdges;
+            graph->deallocateEdgesArray(connectingEdges, edgeCount);
 
             currentNode->visited = true;
 

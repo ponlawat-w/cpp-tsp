@@ -63,6 +63,8 @@ namespace TSP::Model {
 
         Graph* clone();
 
+        void deallocateEdgesArray(Edge**, int);
+
         static Graph* createGrid(int);
     };
 

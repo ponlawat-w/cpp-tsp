@@ -3,23 +3,29 @@
 namespace TSP::FrontierZDD {
 
     ZddNode::ZddNode(int value, int size): BinaryNode(value, false) {
-        this->degrees = new int[size];
-        this->components = new int[size];
+        this->size = size;
+        this->degrees = new int[this->size];
+        this->components = new int[this->size];
 
-        for (int v = 0; v < size; v++) {
+        for (int v = 0; v < this->size; v++) {
             this->degrees[v] = 0;
             this->components[v] = v;
         }
     }
 
     ZddNode::~ZddNode() {
+//        for (int v = 0; v < this->size; v++) {
+//            delete &this->degrees[v];
+//            delete &this->components[v];
+//        }
         delete[] this->degrees;
         delete[] this->components;
     }
 
-    ZddNode* ZddNode::clone(int size) {
-        ZddNode* newNode = new ZddNode(this->value, size);
-        for (int v = 0; v < size; v++) {
+    ZddNode* ZddNode::clone() {
+        this->size = size;
+        ZddNode* newNode = new ZddNode(this->value, this->size);
+        for (int v = 0; v < this->size; v++) {
             newNode->degrees[v] = this->degrees[v];
             newNode->components[v] = this->components[v];
         }
@@ -27,9 +33,9 @@ namespace TSP::FrontierZDD {
         return newNode;
     }
 
-    ZddNode* ZddNode::forkChild(int value, int size) {
-        ZddNode* childNode = new ZddNode(value, size);
-        for (int v = 0; v < size; v++) {
+    ZddNode* ZddNode::forkChild(int value) {
+        ZddNode* childNode = new ZddNode(value, this->size);
+        for (int v = 0; v < this->size; v++) {
             childNode->degrees[v] = this->degrees[v];
             childNode->components[v] = this->components[v];
         }
@@ -60,7 +66,16 @@ namespace TSP::FrontierZDD {
         return true;
     }
 
+    int ZddNode::hashValue(int* frontiers, int length, int hashNumber) {
+        int value = 0;
+        for (int fv = 0; fv < length; fv++) {
+            value += frontiers[fv];
+        }
+        return value % hashNumber;
+    }
+
     ZddNode* ZddNode::createRootNode(Graph* graph) {
         return new ZddNode(0, graph->getVertices());
     }
+
 }

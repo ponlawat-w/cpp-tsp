@@ -13,9 +13,11 @@ namespace TSP::FrontierZDD {
 
     class Simpath: public FrontierMap {
         BinaryTree* tree;
-        set<ZddNode*>* nodesByFrontiers;
+        vector<ZddNode*>** nodeByLevels;
         int origin;
         int destination;
+
+        int frontierHashNumber = 139;
 
         bool isOriginDestination(int);
         void calculate();
