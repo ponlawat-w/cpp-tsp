@@ -6,6 +6,7 @@
 #include "classes/algorithm/spanningTree.hpp"
 #include "classes/algorithm/perfectMatching.hpp"
 #include "classes/algorithm/eulerCircuit.hpp"
+#include "classes/algorithm/christofides.hpp"
 
 using namespace std;
 using namespace TSP::Model;
@@ -18,6 +19,8 @@ void testSimpath();
 void testSpanningTree();
 void testPerfectMatching();
 void testEulerCircuit();
+void testChristofides();
+void testVersus();
 
 int main() {
 
@@ -29,6 +32,12 @@ int main() {
     getchar();
     cout << "### EULER CIRCUIT ###" << endl;
     testEulerCircuit();
+    getchar();
+    cout << "### CHRISTOFIDES ###" << endl;
+    testChristofides();
+    getchar();
+    cout << "### Greedy vs Christofides ###" << endl;
+    testVersus();
     getchar();
     cout << "### SIMPATH ###" << endl;
     testSimpath();
@@ -42,6 +51,7 @@ void printGraph(Graph* g) {
     for (auto edge: edgeSet) {
         cout << "    " << g->vertexName(edge->getVertex(0)) << " <-> " << g->vertexName(edge->getVertex(1)) << " = " << edge->getWeight() << "\n";
     }
+    cout << "  Total weight: " << g->getTotalWeight() << endl;
 }
 
 void printOrder(Graph* g, vector<int> vertexOrder, int weight) {
@@ -156,4 +166,110 @@ void testEulerCircuit() {
     printOrder(graph, euler->getVertexOrder(), euler->getTotalWeight());
 
     delete graph, euler;
+}
+
+void testChristofides() {
+
+    Graph* graph = new Graph(6, "abcdef");
+    graph->addEdgeByName("a", "b", 1)
+        ->addEdgeByName("a", "d", 2)
+        ->addEdgeByName("b", "c", 3)
+        ->addEdgeByName("b", "d", 5)
+        ->addEdgeByName("d", "e", 4)
+        ->addEdgeByName("c", "e", 6)
+        ->addEdgeByName("c", "f", 2)
+        ->addEdgeByName("e", "f", 1);
+    printGraph(graph);
+    Christofides* christofides = new Christofides(graph, graph->vertexValue("a"));
+    printOrder(graph, christofides->getVertexOrder(), christofides->getTotalWeight());
+
+    delete graph;
+
+    cout << endl << "<-->" << endl;
+
+    graph = new Graph(9, "abcdefghi");
+    graph->addEdgeByName("a", "b", 2)
+        ->addEdgeByName("b", "c", 4)
+        ->addEdgeByName("c", "d", 2)
+        ->addEdgeByName("d", "e", 1)
+        ->addEdgeByName("e", "f", 6)
+        ->addEdgeByName("f", "a", 7)
+        ->addEdgeByName("a", "g", 3)
+        ->addEdgeByName("b", "g", 6)
+        ->addEdgeByName("g", "i", 1)
+        ->addEdgeByName("g", "h", 3)
+        ->addEdgeByName("f", "i", 5)
+        ->addEdgeByName("i", "h", 4)
+        ->addEdgeByName("h", "c", 2)
+        ->addEdgeByName("i", "e", 2)
+        ->addEdgeByName("h", "d", 8);
+    printGraph(graph);
+    christofides = new Christofides(graph, graph->vertexValue("f"));
+    printOrder(graph, christofides->getVertexOrder(), christofides->getTotalWeight());
+
+    delete graph, christofides;
+
+}
+
+void testVersus() {
+
+    Graph* graph;
+    GreedyWeight* greedy;
+    Christofides* christofides;
+    int startVertex;
+
+    //
+
+    graph = new Graph(6, "abcdef");
+    graph->addEdgeByName("a", "b", 1)
+            ->addEdgeByName("a", "d", 2)
+            ->addEdgeByName("b", "c", 3)
+            ->addEdgeByName("b", "d", 5)
+            ->addEdgeByName("d", "e", 4)
+            ->addEdgeByName("c", "e", 6)
+            ->addEdgeByName("c", "f", 2)
+            ->addEdgeByName("e", "f", 1);
+    startVertex = graph->vertexValue("a");
+
+    cout << "Greedy: ";
+    greedy = new GreedyWeight(graph, startVertex);
+    printOrder(graph, greedy->getVertexOrder(), greedy->getTotalWeight());
+
+    christofides = new Christofides(graph, startVertex);
+    cout << "Christofides: ";
+    printOrder(graph, christofides->getVertexOrder(), christofides->getTotalWeight());
+
+    delete graph, greedy, christofides;
+
+    //
+
+    getchar();
+
+    graph = new Graph(9, "abcdefghi");
+    graph->addEdgeByName("a", "b", 2)
+            ->addEdgeByName("b", "c", 4)
+            ->addEdgeByName("c", "d", 2)
+            ->addEdgeByName("d", "e", 1)
+            ->addEdgeByName("e", "f", 6)
+            ->addEdgeByName("f", "a", 7)
+            ->addEdgeByName("a", "g", 3)
+            ->addEdgeByName("b", "g", 6)
+            ->addEdgeByName("g", "i", 1)
+            ->addEdgeByName("g", "h", 3)
+            ->addEdgeByName("f", "i", 5)
+            ->addEdgeByName("i", "h", 4)
+            ->addEdgeByName("h", "c", 2)
+            ->addEdgeByName("i", "e", 2)
+            ->addEdgeByName("h", "d", 8);
+    startVertex = graph->vertexValue("f");
+
+    cout << "Greedy: ";
+    greedy = new GreedyWeight(graph, startVertex);
+    printOrder(graph, greedy->getVertexOrder(), greedy->getTotalWeight());
+
+    christofides = new Christofides(graph, startVertex);
+    cout << "Christofides: ";
+    printOrder(graph, christofides->getVertexOrder(), christofides->getTotalWeight());
+
+    delete graph, greedy, christofides;
 }
