@@ -76,12 +76,13 @@ void testSimpath() {
 
     getchar();
 
-    for (int i = 2; i < 7; i++) {
+    for (int i = 2; i < 8; i++) {
         cout << ">> Grid: " << i << " <<\n";
         g = Graph::createGrid(i);
         printGraph(g);
         simpath = new Simpath(g, 0, (i * i) - 1);
-        simpath->printFrontiers();
+        cout << "Calculation Done! Counting result..." << endl;
+//        simpath->printFrontiers();
         simpath->printTree();
 
         delete g, simpath;

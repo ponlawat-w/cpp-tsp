@@ -2,7 +2,19 @@
 
 namespace TSP::FrontierZDD {
 
+    bool compareEdges(Edge* edgeA, Edge* edgeB) {
+        int verA1 = min(edgeA->getVertex(0), edgeA->getVertex(1));
+        int verA2 = edgeA->getAnotherVertex(verA1);
+        int verB1 = min(edgeB->getVertex(0), edgeB->getVertex(1));
+        int verB2 = edgeB->getAnotherVertex(verB1);
+
+        return (verA1 == verB1) ? verA2 > verB2 : verA1 > verB1;
+    }
+
     Simpath::Simpath(Graph* graph, int origin, int destination): FrontierMap(graph) {
+        sort(this->edges, this->edges + this->edgeSize, compareEdges);
+        this->generateFrontiers();
+
         this->graph = graph;
         this->origin = origin;
         this->destination = destination;
@@ -11,13 +23,11 @@ namespace TSP::FrontierZDD {
             this->nodeLists[e] = new ZddNodeList();
         }
         this->tree = nullptr;
+
         this->calculate();
     }
 
     Simpath::~Simpath() {
-//        for (int i = 0; i < this->edgeSize; i++) {
-//            delete &this->nodeByLevels[i];
-//        }
         for (int e = 0; e < this->edgeSize; e++) {
             delete this->nodeLists[e];
         }
@@ -40,7 +50,7 @@ namespace TSP::FrontierZDD {
 
         for (int whichChild: {0, 1}) {
 
-            if (index < 10) {
+            if (index < 20) {
                 cout << whichChild;
             }
 
@@ -70,7 +80,7 @@ namespace TSP::FrontierZDD {
                 node->setChild(whichChild, toTerminal);
             }
 
-            if (index < 10) {
+            if (index < 20) {
                 cout << "\b";
             }
 

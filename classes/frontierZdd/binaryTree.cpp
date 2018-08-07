@@ -13,5 +13,6 @@ namespace TSP::FrontierZDD {
     void BinaryTree::printTruePaths(int* count) {
         vector<int> indices;
         this->rootNode->traversePrintTruePath(indices, count);
+        cout << "\r";
     }
 }

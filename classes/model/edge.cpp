@@ -13,8 +13,6 @@ namespace TSP::Model {
     }
 
     Edge::~Edge() {
-//        delete &this->vertices[0];
-//        delete &this->vertices[1];
         delete[] this->vertices;
     }
 

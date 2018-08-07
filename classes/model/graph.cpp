@@ -241,9 +241,6 @@ namespace TSP::Model {
 
     void Graph::deallocateAdjacencyMatrix(int** adjacency) {
         for (int i = 0; i < this->vertices; i++) {
-//            for (int j = 0; j < this->vertices; j++) {
-//                delete &adjacency[i][j];
-//            }
             delete[] adjacency[i];
         }
 

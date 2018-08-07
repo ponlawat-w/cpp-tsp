@@ -37,10 +37,9 @@ namespace TSP::FrontierZDD {
             }
 
             (*count)++;
-//            for (int index: indices) {
-//                cout << index << " ";
-//            }
-//            cout << "\n";
+            if (*count % 10000 == 0) {
+                cout << "\r" << *count;
+            }
         } else {
             if (this->falseChild != nullptr) {
                 this->falseChild->traversePrintTruePath(indices, count);

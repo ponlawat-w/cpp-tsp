@@ -2,6 +2,30 @@
 
 namespace TSP::FrontierZDD {
 
+    FrontierMap::FrontierMap(Graph* graph) {
+        this->graph = graph->clone();
+
+        set<Edge*> edgeSet = this->graph->getEdgeSet();
+        this->edges = this->edgeSetToArray(edgeSet);
+        this->edgeSize = edgeSet.size();
+
+        this->terminalFalse = new BinaryNode(0, true);
+        this->terminalTrue = new BinaryNode(1, true);
+    }
+
+    FrontierMap::~FrontierMap() {
+        for (int e = 0; e < this->edgeSize; e++) {
+            delete[] this->edges[e];
+            delete[] this->frontiers[e];
+        }
+
+        delete[] this->frontiers;
+        delete[] this->frontierSizes;
+        delete[] this->edges;
+
+        delete this->graph;
+    }
+
     bool FrontierMap::vertexIsFinished(int vertex, int edgeIndex) {
         for (int e = edgeIndex; e < this->edgeSize; e++) {
             if (this->edges[e]->connects(vertex)) {
@@ -62,36 +86,6 @@ namespace TSP::FrontierZDD {
             this->frontiers[e] = this->intSetToArray(vertices);
             this->frontierSizes[e] = vertices.size();
         }
-    }
-
-    FrontierMap::FrontierMap(Graph* graph) {
-        this->graph = graph->clone();
-
-        set<Edge*> edgeSet = this->graph->getEdgeSet();
-        this->edges = this->edgeSetToArray(edgeSet);
-        this->edgeSize = edgeSet.size();
-
-        this->terminalFalse = new BinaryNode(0, true);
-        this->terminalTrue = new BinaryNode(1, true);
-
-        this->generateFrontiers();
-    }
-
-    FrontierMap::~FrontierMap() {
-        for (int e = 0; e < this->edgeSize; e++) {
-//            for (int fv = 0; fv < this->frontierSizes[e]; fv++) {
-//                delete &this->frontiers[e][fv];
-//            }
-            delete[] this->edges[e];
-            delete[] this->frontiers[e];
-//            delete &this->frontierSizes[e];
-        }
-
-        delete[] this->frontiers;
-        delete[] this->frontierSizes;
-        delete[] this->edges;
-
-        delete this->graph;
     }
 
     void FrontierMap::printFrontiers() {

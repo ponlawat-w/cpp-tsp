@@ -14,10 +14,6 @@ namespace TSP::FrontierZDD {
     }
 
     ZddNode::~ZddNode() {
-//        for (int v = 0; v < this->size; v++) {
-//            delete &this->degrees[v];
-//            delete &this->components[v];
-//        }
         delete[] this->degrees;
         delete[] this->components;
     }
