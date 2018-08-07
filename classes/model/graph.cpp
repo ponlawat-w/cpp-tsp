@@ -206,6 +206,10 @@ namespace TSP::Model {
         return edges;
     }
 
+    Adjacency* Graph::getAdjacencyOf(int vertex) {
+        return this->adjacencies[vertex];
+    }
+
     int Graph::getDegree(int v) {
         return this->adjacencies[v]->getLength();
     }

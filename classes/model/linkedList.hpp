@@ -19,6 +19,7 @@ namespace TSP::Model {
         LinkedList();
         ~LinkedList();
         void add(T);
+        bool inList(T);
         bool findAndRemove(T);
     };
 

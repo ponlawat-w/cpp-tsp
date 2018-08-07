@@ -53,6 +53,7 @@ namespace TSP::Model {
         vector<int> verticesValues(vector<string>);
 
         Edge** getEdgesConnectingTo(int, int&);
+        Adjacency* getAdjacencyOf(int);
         int getDegree(int);
         Graph* makeCompleteGraph();
         int** getAdjacencyMatrix();

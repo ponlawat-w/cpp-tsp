@@ -12,12 +12,7 @@ namespace TSP::Model {
         this->weight = weight;
     }
 
-    Edge::~Edge() {
-        delete[] this->vertices;
-    }
-
     void Edge::setVertices(int v1, int v2) {
-        this->vertices = new int[2];
         this->vertices[0] = v1;
         this->vertices[1] = v2;
     }
@@ -33,7 +28,19 @@ namespace TSP::Model {
 
     bool Edge::sameVertices(int v1, int v2) {
         return (this->vertices[0] == v1 && this->vertices[1] == v2)
-               || (this->vertices[0] == v2 && this->vertices[2] == v1);
+               || (this->vertices[0] == v2 && this->vertices[1] == v1);
+    }
+
+    void Edge::orderVertices(int v1, int v2) {
+        if (!this->sameVertices(v1, v2)) {
+            throw;
+        }
+
+        if (this->vertices[0] == v2) {
+            int temp = this->vertices[0];
+            this->vertices[0] = this->vertices[1];
+            this->vertices[1] = temp;
+        }
     }
 
     int Edge::getVertex(int index) {

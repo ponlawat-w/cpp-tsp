@@ -5,6 +5,7 @@
 #include "classes/frontierZdd/simpath.hpp"
 #include "classes/algorithm/spanningTree.hpp"
 #include "classes/algorithm/perfectMatching.hpp"
+#include "classes/algorithm/eulerCircuit.hpp"
 
 using namespace std;
 using namespace TSP::Model;
@@ -16,11 +17,20 @@ void printOrder(Graph*, vector<int>, int);
 void testSimpath();
 void testSpanningTree();
 void testPerfectMatching();
+void testEulerCircuit();
 
 int main() {
 
+    cout << "### MINIMUM SPANNING TREE ###" << endl;
     testSpanningTree();
+    getchar();
+    cout << "### MINIMUM PERFECT MATCHING ###" << endl;
     testPerfectMatching();
+    getchar();
+    cout << "### EULER CIRCUIT ###" << endl;
+    testEulerCircuit();
+    getchar();
+    cout << "### SIMPATH ###" << endl;
     testSimpath();
 
     return 0;
@@ -63,9 +73,8 @@ void testSimpath() {
 
     delete g, simpath;
 
-    getchar();
-
-    for (int i = 2; i < 8; i++) {
+    for (int i = 2; i < 7; i++) {
+        getchar();
         cout << ">> Grid: " << i << " <<\n";
         g = Graph::createGrid(i);
         printGraph(g);
@@ -75,7 +84,6 @@ void testSimpath() {
         simpath->printTree();
 
         delete g, simpath;
-        getchar();
     }
 }
 
@@ -131,4 +139,21 @@ void testPerfectMatching() {
     cout << matching->getTotalWeight() << endl;
 
     delete graph, matching;
+}
+
+void testEulerCircuit() {
+    Graph* graph = new Graph(5, "abcde");
+    graph->addEdgeByName("a", "b", 1)
+        ->addEdgeByName("a", "c", 1)
+        ->addEdgeByName("a", "d", 1)
+        ->addEdgeByName("a", "e", 1)
+        ->addEdgeByName("e", "d", 1)
+        ->addEdgeByName("c", "b", 1);
+
+    printGraph(graph);
+
+    EulerCircuit* euler = new EulerCircuit(graph, graph->vertexValue("a"));
+    printOrder(graph, euler->getVertexOrder(), euler->getTotalWeight());
+
+    delete graph, euler;
 }

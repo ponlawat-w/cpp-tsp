@@ -35,6 +35,19 @@ namespace TSP::Model {
     }
 
     template<typename T>
+    bool LinkedList<T>::inList(T value) {
+        auto* currentNode = this->head;
+        while (currentNode != nullptr) {
+            if (currentNode->value == value) {
+                return true;
+            }
+            currentNode = currentNode->next;
+        }
+
+        return false;
+    }
+
+    template<typename T>
     bool Model::LinkedList<T>::findAndRemove(T value) {
         if (this->head == nullptr) {
             return false;
