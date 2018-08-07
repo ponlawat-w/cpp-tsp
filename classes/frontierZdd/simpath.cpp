@@ -18,9 +18,9 @@ namespace TSP::FrontierZDD {
         this->graph = graph;
         this->origin = origin;
         this->destination = destination;
-        this->nodeLists = new ZddNodeList*[this->edgeSize];
+        this->nodeLists = new LinkedList<ZddNode*>*[this->edgeSize];
         for (int e = 0; e < this->edgeSize; e++) {
-            this->nodeLists[e] = new ZddNodeList();
+            this->nodeLists[e] = new LinkedList<ZddNode*>();
         }
         this->tree = nullptr;
 
@@ -138,7 +138,16 @@ namespace TSP::FrontierZDD {
     }
 
     ZddNode* Simpath::findEquivalentNode(ZddNode* node, int index) {
-        return this->nodeLists[index]->findEquivalent(node, this->frontiers[index], this->frontierSizes[index]);
+        LinkedList<ZddNode*>* list = this->nodeLists[index];
+        linkedListNode<ZddNode*>* currentNode = list->head;
+        while (currentNode != nullptr) {
+            if (currentNode->value->isEquivalent(node, this->frontiers[index], this->frontierSizes[index])) {
+                return currentNode->value;
+            }
+            currentNode = currentNode->next;
+        }
+
+        return nullptr;
     }
 
     void Simpath::printTree() {

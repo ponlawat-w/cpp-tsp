@@ -19,9 +19,9 @@ void testPerfectMatching();
 
 int main() {
 
-//    testSimpath();
-//    testSpanningTree();
+    testSpanningTree();
     testPerfectMatching();
+    testSimpath();
 
     return 0;
 }
@@ -128,7 +128,7 @@ void testPerfectMatching() {
     for (int* match: matching->getMatches()) {
         cout << graph->vertexName(match[0]) << "<->" << graph->vertexName(match[1]) << endl;
     }
-    cout << matching->getTotalWeight();
+    cout << matching->getTotalWeight() << endl;
 
     delete graph, matching;
 }

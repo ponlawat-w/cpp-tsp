@@ -94,7 +94,7 @@ namespace TSP::Model {
         for (int v = 0; v < this->vertices; v++) {
             auto* currentNode = this->adjacencies[v]->head;
             while (currentNode != nullptr) {
-                edgeSet.insert(currentNode->edge);
+                edgeSet.insert(currentNode->value);
                 currentNode = currentNode->next;
             }
         }
@@ -198,7 +198,7 @@ namespace TSP::Model {
         auto* currentNode = this->adjacencies[vertex]->head;
         int i = 0;
         while (currentNode != nullptr) {
-            edges[i] = currentNode->edge;
+            edges[i] = currentNode->value;
             currentNode = currentNode->next;
             i++;
         }

@@ -6,7 +6,7 @@
 #include "frontierMap.hpp"
 #include "binaryNode.hpp"
 #include "binaryTree.hpp"
-#include "zddNodeList.hpp"
+#include "../model/linkedList.hpp"
 
 namespace TSP::FrontierZDD {
 
@@ -14,7 +14,7 @@ namespace TSP::FrontierZDD {
 
     class Simpath: public FrontierMap {
         BinaryTree* tree;
-        ZddNodeList** nodeLists;
+        LinkedList<ZddNode*>** nodeLists;
         int origin;
         int destination;
 

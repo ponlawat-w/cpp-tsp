@@ -2,21 +2,14 @@
 #define TSP_ADJACENCY_HPP
 
 #include "edge.hpp"
+#include "linkedList.hpp"
 
 namespace TSP::Model {
 
-    struct adjacencyNode {
-        Edge* edge;
-        adjacencyNode* next;
-    };
-
-    class Adjacency {
+    class Adjacency: public LinkedList<Edge*> {
         int length;
     public:
-        adjacencyNode* head;
-        adjacencyNode* tail;
         Adjacency();
-        ~Adjacency();
         void insert(Edge*);
         void remove(Edge*);
         Edge* findByVertex(int);
