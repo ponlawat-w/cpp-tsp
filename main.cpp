@@ -4,6 +4,7 @@
 #include "classes/algorithm/greedy.hpp"
 #include "classes/frontierZdd/simpath.hpp"
 #include "classes/algorithm/spanningTree.hpp"
+#include "classes/algorithm/perfectMatching.hpp"
 
 using namespace std;
 using namespace TSP::Model;
@@ -14,10 +15,13 @@ void printGraph(Graph*);
 void printOrder(Graph*, vector<int>, int);
 void testSimpath();
 void testSpanningTree();
+void testPerfectMatching();
 
 int main() {
 
-    testSpanningTree();
+//    testSimpath();
+//    testSpanningTree();
+    testPerfectMatching();
 
     return 0;
 }
@@ -100,4 +104,31 @@ void testSpanningTree() {
     printGraph(tree);
     cout << "Total Weight: " << tree->getTotalWeight();
     cout << endl;
+
+    delete graph, tree;
+}
+
+void testPerfectMatching() {
+    Graph* graph = new Graph(8, "abcdefhi");
+    graph->addEdgeByName("a", "b", 2)
+            ->addEdgeByName("a", "f", 7)
+            ->addEdgeByName("b", "c", 4)
+            ->addEdgeByName("c", "d", 2)
+            ->addEdgeByName("c", "h", 2)
+            ->addEdgeByName("d", "e", 1)
+            ->addEdgeByName("d", "h", 8)
+            ->addEdgeByName("e", "f", 6)
+            ->addEdgeByName("e", "i", 2)
+            ->addEdgeByName("f", "i", 5)
+            ->addEdgeByName("h", "i", 1);
+    printGraph(graph);
+    graph->makeCompleteGraph();
+
+    MinimumPerfectMatching* matching = new MinimumPerfectMatching(graph);
+    for (int* match: matching->getMatches()) {
+        cout << graph->vertexName(match[0]) << "<->" << graph->vertexName(match[1]) << endl;
+    }
+    cout << matching->getTotalWeight();
+
+    delete graph, matching;
 }

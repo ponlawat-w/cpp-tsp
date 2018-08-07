@@ -2,7 +2,6 @@
 #define TSP_SPANNINGTREE_HPP
 
 #include <algorithm>
-#include <set>
 #include <vector>
 #include "comparing.hpp"
 #include "../model/graph.hpp"

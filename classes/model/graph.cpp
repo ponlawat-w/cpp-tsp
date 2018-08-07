@@ -102,6 +102,16 @@ namespace TSP::Model {
         return edgeSet;
     }
 
+    vector<Edge*> Graph::getEdgeVector() {
+        set<Edge*> edgeSet = this->getEdgeSet();
+        vector<Edge*> edges;
+        for (Edge* edge: edgeSet) {
+            edges.push_back(edge);
+        }
+
+        return edges;
+    }
+
     void Graph::removeEdges(int vertex) {
         int edgeCount = 0;
         Edge** edges = this->getEdgesConnectingTo(vertex, edgeCount);
@@ -323,9 +333,6 @@ namespace TSP::Model {
     }
 
     void Graph::deallocateEdgesArray(Edge** edges, int size) {
-        for (int e = 0; e < size; e++) {
-            delete[] edges[e];
-        }
         delete[] edges;
     }
 

@@ -35,6 +35,7 @@ namespace TSP::Model {
         Graph* addEdgeByName(string, string, int);
 
         set<Edge*> getEdgeSet();
+        vector<Edge*> getEdgeVector();
 
         void removeEdges(int);
         void removeEdges(int, int);

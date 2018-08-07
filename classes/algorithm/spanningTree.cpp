@@ -23,11 +23,7 @@ namespace TSP::Algorithm {
 
     Graph* MinimumSpanningTree::create(Graph* graph) {
         Graph* tree = new Graph(graph->getVertices(), graph->getMapping());
-        set<Edge*> edgeSet = graph->getEdgeSet();
-        vector<Edge*> edges;
-        for (Edge* edge: edgeSet) {
-            edges.push_back(edge);
-        }
+        vector<Edge*> edges = graph->getEdgeVector();
         sort(edges.begin(), edges.end(), compareEdgeByWeightAscending);
 
         int* components = new int[tree->getVertices()];
