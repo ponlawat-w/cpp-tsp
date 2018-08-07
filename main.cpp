@@ -3,6 +3,7 @@
 #include "classes/algorithm/dijkstra.hpp"
 #include "classes/algorithm/greedy.hpp"
 #include "classes/frontierZdd/simpath.hpp"
+#include "classes/algorithm/spanningTree.hpp"
 
 using namespace std;
 using namespace TSP::Model;
@@ -12,27 +13,11 @@ using namespace TSP::FrontierZDD;
 void printGraph(Graph*);
 void printOrder(Graph*, vector<int>, int);
 void testSimpath();
+void testSpanningTree();
 
 int main() {
 
-    testSimpath();
-
-//    Graph* graph = new Graph(6, "abcdef");
-//    graph->addEdgeByName("a", "b", 1)
-//        ->addEdgeByName("a", "d", 2)
-//        ->addEdgeByName("b", "c", 3)
-//        ->addEdgeByName("b", "d", 5)
-//        ->addEdgeByName("d", "e", 4)
-//        ->addEdgeByName("c", "e", 6)
-//        ->addEdgeByName("c", "f", 2)
-//        ->addEdgeByName("e", "f", 1);
-//    printGraph(graph);
-//
-//    GreedyWeight* greedy = new GreedyWeight(graph, graph->vertexValue("a"));
-//    printOrder(graph, greedy->getVertexOrder(), greedy->getTotalWeight());
-
-//    Graph* subGraph = graph->extractSubGraphByNames({"a", "b", "d"}, false);
-//    printGraph(subGraph);
+    testSpanningTree();
 
     return 0;
 }
@@ -88,4 +73,31 @@ void testSimpath() {
         delete g, simpath;
         getchar();
     }
+}
+
+void testSpanningTree() {
+    Graph* graph = new Graph(9, "abcdefghi");
+    graph->addEdgeByName("a", "b", 2)
+        ->addEdgeByName("a", "f", 7)
+        ->addEdgeByName("a", "g", 3)
+        ->addEdgeByName("b", "c", 4)
+        ->addEdgeByName("b", "g", 6)
+        ->addEdgeByName("c", "d", 2)
+        ->addEdgeByName("c", "h", 2)
+        ->addEdgeByName("d", "e", 1)
+        ->addEdgeByName("d", "h", 8)
+        ->addEdgeByName("e", "f", 6)
+        ->addEdgeByName("e", "i", 2)
+        ->addEdgeByName("f", "i", 5)
+        ->addEdgeByName("g", "h", 3)
+        ->addEdgeByName("g", "i", 1)
+        ->addEdgeByName("h", "i", 1);
+    printGraph(graph);
+
+    cout << "-- MINIMUM SPANNING TREE --" << endl;
+
+    Graph* tree = MinimumSpanningTree::create(graph);
+    printGraph(tree);
+    cout << "Total Weight: " << tree->getTotalWeight();
+    cout << endl;
 }
