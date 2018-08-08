@@ -12,9 +12,6 @@ namespace TSP::FrontierZDD {
     using namespace TSP::Model;
 
     class FrontierMap {
-        bool vertexIsFinished(int vertex, int edgeIndex);
-        Edge** edgeSetToArray(set<Edge*>);
-        int* intSetToArray(set<int>);
 
     protected:
         Graph* graph;
@@ -24,7 +21,10 @@ namespace TSP::FrontierZDD {
         int* frontierSizes;
         BinaryNode* terminalFalse;
         BinaryNode* terminalTrue;
-        void generateFrontiers();
+
+        Edge** edgeSetToArray(set<Edge*>);
+        int* intSetToArray(set<int>);
+        bool vertexIsFinished(int vertex, int edgeIndex);
 
     public:
         explicit FrontierMap(Graph*);

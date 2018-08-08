@@ -19,7 +19,6 @@ namespace TSP::FrontierZDD {
     }
 
     ZddNode* ZddNode::clone() {
-        this->size = size;
         ZddNode* newNode = new ZddNode(this->value, this->size);
         for (int v = 0; v < this->size; v++) {
             newNode->degrees[v] = this->degrees[v];
@@ -39,12 +38,12 @@ namespace TSP::FrontierZDD {
         return childNode;
     }
 
-    void ZddNode::addEdge(int* vertices, int size) {
+    void ZddNode::addEdge(int* vertices) {
         this->degrees[vertices[0]]++;
         this->degrees[vertices[1]]++;
         int minComponent = min(this->components[vertices[0]], this->components[vertices[1]]);
         int maxComponent = max(this->components[vertices[0]], this->components[vertices[1]]);
-        for (int v = 0; v < size; v++) {
+        for (int v = 0; v < this->size; v++) {
             if (this->components[v] == maxComponent) {
                 this->components[v] = minComponent;
             }

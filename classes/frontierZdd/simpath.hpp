@@ -24,6 +24,7 @@ namespace TSP::FrontierZDD {
         BinaryNode* checkTerminal(ZddNode*, int whichChild, int index);
         bool inFrontier(int vertex, int index);
         ZddNode* findEquivalentNode(ZddNode*, int index);
+        void generateFrontiers();
 
     public:
         Simpath(Graph*, int origin, int destination);

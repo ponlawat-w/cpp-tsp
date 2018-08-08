@@ -58,36 +58,6 @@ namespace TSP::FrontierZDD {
         return array;
     }
 
-    void FrontierMap::generateFrontiers() {
-        this->frontiers = new int*[this->edgeSize + 1];
-        this->frontierSizes = new int[this->edgeSize + 1];
-
-        this->frontiers[0] = new int[0];
-        this->frontierSizes[0] = 0;
-
-        for (int e = 1; e <= this->edgeSize; e++) {
-            set<int> vertices;
-            // copy from previous one
-            for (int fv = 0; fv < this->frontierSizes[e - 1]; fv++) {
-                vertices.insert(this->frontiers[e - 1][fv]);
-            }
-
-            Edge* edge = this->edges[e - 1];
-            vertices.insert(edge->getVertex(0));
-            vertices.insert(edge->getVertex(1));
-
-            if (this->vertexIsFinished(edge->getVertex(0), e)) {
-                vertices.erase(edge->getVertex(0));
-            }
-            if (this->vertexIsFinished(edge->getVertex(1), e)) {
-                vertices.erase(edge->getVertex(1));
-            }
-
-            this->frontiers[e] = this->intSetToArray(vertices);
-            this->frontierSizes[e] = vertices.size();
-        }
-    }
-
     void FrontierMap::printFrontiers() {
         for (int e = 0; e < this->edgeSize + 1; e++) {
             string ev1 = e > 0 ? this->graph->vertexName(this->edges[e - 1]->getVertex(0)) : "";

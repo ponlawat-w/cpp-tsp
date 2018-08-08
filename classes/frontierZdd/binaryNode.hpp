@@ -17,11 +17,15 @@ namespace TSP::FrontierZDD {
 
     public:
         explicit BinaryNode(int, bool);
-        ~BinaryNode();
+        virtual ~BinaryNode();
 
         BinaryNode* getChild(int);
         void setChild(int, BinaryNode*);
         bool terminates();
+        bool hasChild(int);
+        bool hasChildren();
+
+        int getValue();
 
         void traversePrintTruePath(vector<int> indices, int* count);
     };

@@ -7,6 +7,7 @@
 #include "classes/algorithm/perfectMatching.hpp"
 #include "classes/algorithm/eulerCircuit.hpp"
 #include "classes/algorithm/christofides.hpp"
+#include "classes/frontierZdd/hamilton.hpp"
 
 using namespace std;
 using namespace TSP::Model;
@@ -21,6 +22,7 @@ void testPerfectMatching();
 void testEulerCircuit();
 void testChristofides();
 void testVersus();
+void testLimitedZdd();
 
 int main() {
 
@@ -36,7 +38,10 @@ int main() {
     cout << "### CHRISTOFIDES ###" << endl;
     testChristofides();
     getchar();
-    cout << "### Greedy vs Christofides ###" << endl;
+    cout << "### Limited ZDD Hamilton ###" << endl;
+    testLimitedZdd();
+    getchar();
+    cout << "### Greedy vs Christofides vs ZddHamilton ###" << endl;
     testVersus();
     getchar();
     cout << "### SIMPATH ###" << endl;
@@ -216,6 +221,7 @@ void testVersus() {
     Graph* graph;
     GreedyWeight* greedy;
     Christofides* christofides;
+    LimitedZddHamilton* zh;
     int startVertex;
 
     //
@@ -239,7 +245,11 @@ void testVersus() {
     cout << "Christofides: ";
     printOrder(graph, christofides->getVertexOrder(), christofides->getTotalWeight());
 
-    delete graph, greedy, christofides;
+    zh = new LimitedZddHamilton(graph, startVertex, 0);
+    cout << "Minimum-Limited ZDD: ";
+    printOrder(graph, zh->getVertexOrder(), zh->getTotalWeight());
+
+    delete graph, greedy, christofides, zh;
 
     //
 
@@ -271,5 +281,57 @@ void testVersus() {
     cout << "Christofides: ";
     printOrder(graph, christofides->getVertexOrder(), christofides->getTotalWeight());
 
-    delete graph, greedy, christofides;
+    zh = new LimitedZddHamilton(graph, startVertex, 0);
+    cout << "Minimum-Limited ZDD: ";
+    printOrder(graph, zh->getVertexOrder(), zh->getTotalWeight());
+
+    delete graph, greedy, christofides, zh;
+}
+
+void testLimitedZdd() {
+    Graph* graph;
+    LimitedZddHamilton* zh;
+    int startVertex;
+
+    graph = new Graph(9, "abcdefghi");
+    graph->addEdgeByName("a", "b", 2)
+            ->addEdgeByName("b", "c", 4)
+            ->addEdgeByName("c", "d", 2)
+            ->addEdgeByName("d", "e", 1)
+            ->addEdgeByName("e", "f", 6)
+            ->addEdgeByName("f", "a", 7)
+            ->addEdgeByName("a", "g", 3)
+            ->addEdgeByName("b", "g", 6)
+            ->addEdgeByName("g", "i", 1)
+            ->addEdgeByName("g", "h", 3)
+            ->addEdgeByName("f", "i", 5)
+            ->addEdgeByName("i", "h", 4)
+            ->addEdgeByName("h", "c", 2)
+            ->addEdgeByName("i", "e", 2)
+            ->addEdgeByName("h", "d", 8);
+    startVertex = graph->vertexValue("f");
+
+//    graph = new Graph(6, "abcdef");
+//    graph->addEdgeByName("a", "b", 1)
+//            ->addEdgeByName("a", "d", 2)
+//            ->addEdgeByName("b", "c", 3)
+//            ->addEdgeByName("b", "d", 5)
+//            ->addEdgeByName("d", "e", 4)
+//            ->addEdgeByName("c", "e", 6)
+//            ->addEdgeByName("c", "f", 2)
+//            ->addEdgeByName("e", "f", 1);
+//    startVertex = graph->vertexValue("a");
+
+//    graph = new Graph(4, "abcd");
+//    graph->addEdgeByName("a", "b", 1)
+//        ->addEdgeByName("b", "d", 1)
+//        ->addEdgeByName("d", "c", 1)
+//        ->addEdgeByName("c", "a", 1);
+//    startVertex = graph->vertexValue("a");
+
+    printGraph(graph);
+    zh = new LimitedZddHamilton(graph, startVertex, 0);
+    printOrder(graph, zh->getVertexOrder(), zh->getTotalWeight());
+
+    delete graph, zh;
 }

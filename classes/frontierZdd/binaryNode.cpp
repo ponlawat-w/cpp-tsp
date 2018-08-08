@@ -30,6 +30,14 @@ namespace TSP::FrontierZDD {
         return this->isTerminal;
     }
 
+    bool BinaryNode::hasChild(int whichChild) {
+        return whichChild == 1 ? this->trueChild != nullptr : this->falseChild != nullptr;
+    }
+
+    bool BinaryNode::hasChildren() {
+        return this->trueChild != nullptr && this->falseChild != nullptr;
+    }
+
     void BinaryNode::traversePrintTruePath(vector<int> indices, int* count) {
         if (this->isTerminal) {
             if (this->value != 1) {
@@ -49,5 +57,9 @@ namespace TSP::FrontierZDD {
                 this->trueChild->traversePrintTruePath(indices, count);
             }
         }
+    }
+
+    int BinaryNode::getValue() {
+        return this->value;
     }
 }

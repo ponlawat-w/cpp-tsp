@@ -59,7 +59,7 @@ namespace TSP::FrontierZDD {
 
                 ZddNode* tempNode = node->clone();
                 if (whichChild == 1) {
-                    tempNode->addEdge(this->edges[index]->getVertices(), this->graph->getVertices());
+                    tempNode->addEdge(this->edges[index]->getVertices());
                 }
 
                 ZddNode* equivalentNode = this->findEquivalentNode(tempNode, index + 1);
@@ -102,7 +102,7 @@ namespace TSP::FrontierZDD {
                 delete tempNode;
                 return this->terminalFalse;
             }
-            tempNode->addEdge(edgeVertices, this->graph->getVertices());
+            tempNode->addEdge(edgeVertices);
         }
 
         for (int vertex: {edgeVertices[0], edgeVertices[1]}) {
@@ -148,6 +148,36 @@ namespace TSP::FrontierZDD {
         }
 
         return nullptr;
+    }
+
+    void Simpath::generateFrontiers() {
+        this->frontiers = new int*[this->edgeSize + 1];
+        this->frontierSizes = new int[this->edgeSize + 1];
+
+        this->frontiers[0] = new int[0];
+        this->frontierSizes[0] = 0;
+
+        for (int e = 1; e <= this->edgeSize; e++) {
+            set<int> vertices;
+            // copy from previous one
+            for (int fv = 0; fv < this->frontierSizes[e - 1]; fv++) {
+                vertices.insert(this->frontiers[e - 1][fv]);
+            }
+
+            Edge* edge = this->edges[e - 1];
+            vertices.insert(edge->getVertex(0));
+            vertices.insert(edge->getVertex(1));
+
+            if (this->vertexIsFinished(edge->getVertex(0), e)) {
+                vertices.erase(edge->getVertex(0));
+            }
+            if (this->vertexIsFinished(edge->getVertex(1), e)) {
+                vertices.erase(edge->getVertex(1));
+            }
+
+            this->frontiers[e] = this->intSetToArray(vertices);
+            this->frontierSizes[e] = vertices.size();
+        }
     }
 
     void Simpath::printTree() {

@@ -15,10 +15,10 @@ namespace TSP::FrontierZDD {
         int* components;
 
         ZddNode(int value, int size);
-        ~ZddNode();
+        virtual ~ZddNode();
         ZddNode* clone();
         ZddNode* forkChild(int value);
-        void addEdge(int*, int size);
+        void addEdge(int*);
         bool isEquivalent(ZddNode*, int* frontiers, int length);
         static ZddNode* createRootNode(Graph*);
     };
