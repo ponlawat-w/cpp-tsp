@@ -8,6 +8,7 @@
 #include "classes/algorithm/eulerCircuit.hpp"
 #include "classes/algorithm/christofides.hpp"
 #include "classes/frontierZdd/hamilton.hpp"
+#include "classes/frontierZdd/christofidesZh.hpp"
 
 using namespace std;
 using namespace TSP::Model;
@@ -26,26 +27,28 @@ void testLimitedZdd();
 
 int main() {
 
-    cout << "### MINIMUM SPANNING TREE ###" << endl;
-    testSpanningTree();
-    getchar();
-    cout << "### MINIMUM PERFECT MATCHING ###" << endl;
-    testPerfectMatching();
-    getchar();
-    cout << "### EULER CIRCUIT ###" << endl;
-    testEulerCircuit();
-    getchar();
-    cout << "### CHRISTOFIDES ###" << endl;
-    testChristofides();
-    getchar();
-    cout << "### Limited ZDD Hamilton ###" << endl;
-    testLimitedZdd();
-    getchar();
-    cout << "### Greedy vs Christofides vs ZddHamilton ###" << endl;
+//    cout << "### MINIMUM SPANNING TREE ###" << endl;
+//    testSpanningTree();
+//    getchar();
+//    cout << "### MINIMUM PERFECT MATCHING ###" << endl;
+//    testPerfectMatching();
+//    getchar();
+//    cout << "### EULER CIRCUIT ###" << endl;
+//    testEulerCircuit();
+//    getchar();
+//    cout << "### CHRISTOFIDES ###" << endl;
+//    testChristofides();
+//    getchar();
+//    cout << "### Limited ZDD Hamilton ###" << endl;
+//    testLimitedZdd();
+//    getchar();
+    cout << "### VS ###" << endl;
     testVersus();
-    getchar();
-    cout << "### SIMPATH ###" << endl;
-    testSimpath();
+//    getchar();
+//    cout << "### SIMPATH ###" << endl;
+//    testSimpath();
+
+    cout << "Terminates" << endl;
 
     return 0;
 }
@@ -84,9 +87,11 @@ void testSimpath() {
 
     Simpath* simpath = new Simpath(g, g->vertexValue("A"), g->vertexValue("D"));
     simpath->printFrontiers();
+    cout << "Calculation Done! Counting result..." << endl;
     simpath->printTree();
 
-    delete g, simpath;
+    delete g;
+    delete simpath;
 
     for (int i = 2; i < 7; i++) {
         getchar();
@@ -94,11 +99,12 @@ void testSimpath() {
         g = Graph::createGrid(i);
         printGraph(g);
         simpath = new Simpath(g, 0, (i * i) - 1);
+        simpath->printFrontiers();
         cout << "Calculation Done! Counting result..." << endl;
-//        simpath->printFrontiers();
         simpath->printTree();
 
-        delete g, simpath;
+        delete g;
+        delete simpath;
     }
 }
 
@@ -128,7 +134,8 @@ void testSpanningTree() {
     cout << "Total Weight: " << tree->getTotalWeight();
     cout << endl;
 
-    delete graph, tree;
+    delete graph;
+    delete tree;
 }
 
 void testPerfectMatching() {
@@ -153,7 +160,8 @@ void testPerfectMatching() {
     }
     cout << matching->getTotalWeight() << endl;
 
-    delete graph, matching;
+    delete graph;
+    delete matching;
 }
 
 void testEulerCircuit() {
@@ -170,7 +178,8 @@ void testEulerCircuit() {
     EulerCircuit* euler = new EulerCircuit(graph, graph->vertexValue("a"));
     printOrder(graph, euler->getVertexOrder(), euler->getTotalWeight());
 
-    delete graph, euler;
+    delete graph;
+    delete euler;
 }
 
 void testChristofides() {
@@ -212,7 +221,8 @@ void testChristofides() {
     christofides = new Christofides(graph, graph->vertexValue("f"));
     printOrder(graph, christofides->getVertexOrder(), christofides->getTotalWeight());
 
-    delete graph, christofides;
+    delete graph;
+    delete christofides;
 
 }
 
@@ -222,6 +232,7 @@ void testVersus() {
     GreedyWeight* greedy;
     Christofides* christofides;
     LimitedZddHamilton* zh;
+    ChristofidesZh* czh;
     int startVertex;
 
     //
@@ -240,16 +251,24 @@ void testVersus() {
     cout << "Greedy: ";
     greedy = new GreedyWeight(graph, startVertex);
     printOrder(graph, greedy->getVertexOrder(), greedy->getTotalWeight());
+    delete greedy;
 
     christofides = new Christofides(graph, startVertex);
     cout << "Christofides: ";
     printOrder(graph, christofides->getVertexOrder(), christofides->getTotalWeight());
+    delete christofides;
 
     zh = new LimitedZddHamilton(graph, startVertex, 0);
     cout << "Minimum-Limited ZDD: ";
     printOrder(graph, zh->getVertexOrder(), zh->getTotalWeight());
+    delete zh;
 
-    delete graph, greedy, christofides, zh;
+    czh = new ChristofidesZh(graph, startVertex);
+    cout << "Christofides-Based Minimum-Limited ZDD: ";
+    printOrder(graph, czh->getVertexOrder(), czh->getTotalWeight());
+    delete czh;
+
+    delete graph;
 
     //
 
@@ -276,16 +295,24 @@ void testVersus() {
     cout << "Greedy: ";
     greedy = new GreedyWeight(graph, startVertex);
     printOrder(graph, greedy->getVertexOrder(), greedy->getTotalWeight());
+    delete greedy;
 
     christofides = new Christofides(graph, startVertex);
     cout << "Christofides: ";
     printOrder(graph, christofides->getVertexOrder(), christofides->getTotalWeight());
+    delete christofides;
 
     zh = new LimitedZddHamilton(graph, startVertex, 0);
     cout << "Minimum-Limited ZDD: ";
     printOrder(graph, zh->getVertexOrder(), zh->getTotalWeight());
+    delete zh;
 
-    delete graph, greedy, christofides, zh;
+    czh = new ChristofidesZh(graph, startVertex);
+    cout << "Christofides-Based Minimum-Limited ZDD: ";
+    printOrder(graph, czh->getVertexOrder(), czh->getTotalWeight());
+    delete czh;
+
+    delete graph;
 }
 
 void testLimitedZdd() {
@@ -333,5 +360,6 @@ void testLimitedZdd() {
     zh = new LimitedZddHamilton(graph, startVertex, 0);
     printOrder(graph, zh->getVertexOrder(), zh->getTotalWeight());
 
-    delete graph, zh;
+    delete graph;
+    delete zh;
 }
