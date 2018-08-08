@@ -9,11 +9,6 @@ namespace TSP::FrontierZDD {
         this->isTerminal = isTerminal;
     }
 
-    BinaryNode::~BinaryNode() {
-        delete this->falseChild;
-        delete this->trueChild;
-    }
-
     BinaryNode* BinaryNode::getChild(int whichChild) {
         return whichChild == 1 ? this->trueChild : this->falseChild;
     }

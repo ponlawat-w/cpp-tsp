@@ -53,7 +53,9 @@ namespace TSP::Algorithm {
         lastEdge->orderVertices(lastVertex, this->startVertex);
         this->path->add(lastEdge);
 
-        delete spanningTree, oddSubGraph, treeUnionMatching;
+        delete spanningTree;
+        delete oddSubGraph;
+        delete treeUnionMatching;
         delete[] visitedVertices;
     }
 

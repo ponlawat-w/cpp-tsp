@@ -15,7 +15,6 @@ namespace TSP::FrontierZDD {
         sort(this->edges, this->edges + this->edgeSize, compareEdges);
         this->generateFrontiers();
 
-        this->graph = graph;
         this->origin = origin;
         this->destination = destination;
         this->nodeLists = new LinkedList<ZddNode*>*[this->edgeSize];

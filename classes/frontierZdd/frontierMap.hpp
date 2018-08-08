@@ -28,7 +28,7 @@ namespace TSP::FrontierZDD {
 
     public:
         explicit FrontierMap(Graph*);
-        ~FrontierMap();
+        virtual ~FrontierMap();
 
         void printFrontiers();
     };

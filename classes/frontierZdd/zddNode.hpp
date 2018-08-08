@@ -15,7 +15,7 @@ namespace TSP::FrontierZDD {
         int* components;
 
         ZddNode(int value, int size);
-        virtual ~ZddNode();
+        ~ZddNode();
         ZddNode* clone();
         ZddNode* forkChild(int value);
         void addEdge(int*);

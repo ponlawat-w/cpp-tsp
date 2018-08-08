@@ -17,7 +17,6 @@ namespace TSP::FrontierZDD {
 
     public:
         explicit BinaryNode(int, bool);
-        virtual ~BinaryNode();
 
         BinaryNode* getChild(int);
         void setChild(int, BinaryNode*);

@@ -14,7 +14,7 @@ namespace TSP::FrontierZDD {
         this->whichChildOfBestNode = -1;
 
         sort(this->edges, this->edges + this->edgeSize, compareEdgeByWeightDescending);
-//        this->generateFrontiers();
+        this->generateFrontiers();
         this->calculate();
     }
 
@@ -232,6 +232,10 @@ namespace TSP::FrontierZDD {
 
     int LimitedZddHamilton::getTotalWeight() {
         vector<int> vertexOrder = this->getVertexOrder();
+        if (vertexOrder.size() != this->graph->getVertices() + 1) {
+            return -1;
+        }
+
         int sum = 0;
         int lastVertex = -1;
         for (int vertex: vertexOrder) {

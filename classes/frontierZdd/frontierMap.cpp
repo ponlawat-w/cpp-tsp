@@ -15,7 +15,6 @@ namespace TSP::FrontierZDD {
 
     FrontierMap::~FrontierMap() {
         for (int e = 0; e < this->edgeSize; e++) {
-            delete[] this->edges[e];
             delete[] this->frontiers[e];
         }
 
