@@ -9,11 +9,13 @@
 #include "classes/algorithm/christofides.hpp"
 #include "classes/frontierZdd/hamilton.hpp"
 #include "classes/frontierZdd/christofidesZh.hpp"
+#include "classes/pso/pso.hpp"
 
 using namespace std;
 using namespace TSP::Model;
 using namespace TSP::Algorithm;
 using namespace TSP::FrontierZDD;
+using namespace TSP::PSO;
 
 void printGraph(Graph*);
 void printOrder(Graph*, vector<int>, int);
@@ -24,29 +26,33 @@ void testEulerCircuit();
 void testChristofides();
 void testVersus();
 void testLimitedZdd();
+void testPSO();
 
 int main() {
 
-//    cout << "### MINIMUM SPANNING TREE ###" << endl;
-//    testSpanningTree();
-//    getchar();
-//    cout << "### MINIMUM PERFECT MATCHING ###" << endl;
-//    testPerfectMatching();
-//    getchar();
-//    cout << "### EULER CIRCUIT ###" << endl;
-//    testEulerCircuit();
-//    getchar();
-//    cout << "### CHRISTOFIDES ###" << endl;
-//    testChristofides();
-//    getchar();
-//    cout << "### Limited ZDD Hamilton ###" << endl;
-//    testLimitedZdd();
-//    getchar();
+    cout << "### MINIMUM SPANNING TREE ###" << endl;
+    testSpanningTree();
+    getchar();
+    cout << "### MINIMUM PERFECT MATCHING ###" << endl;
+    testPerfectMatching();
+    getchar();
+    cout << "### EULER CIRCUIT ###" << endl;
+    testEulerCircuit();
+    getchar();
+    cout << "### CHRISTOFIDES ###" << endl;
+    testChristofides();
+    getchar();
+    cout << "### Limited ZDD Hamilton ###" << endl;
+    testLimitedZdd();
+    getchar();
+    cout << "### PSO ###" << endl;
+    testPSO();
+    getchar();
     cout << "### VS ###" << endl;
     testVersus();
-//    getchar();
-//    cout << "### SIMPATH ###" << endl;
-//    testSimpath();
+    getchar();
+    cout << "### SIMPATH ###" << endl;
+    testSimpath();
 
     cout << "Terminates" << endl;
 
@@ -233,6 +239,8 @@ void testVersus() {
     Christofides* christofides;
     LimitedZddHamilton* zh;
     ChristofidesZh* czh;
+    ParticleSwarm* smallPSO;
+    ParticleSwarm* bigPSO;
     int startVertex;
 
     //
@@ -248,31 +256,55 @@ void testVersus() {
             ->addEdgeByName("e", "f", 1);
     startVertex = graph->vertexValue("a");
 
-    cout << "Greedy: ";
+    cout << "> Greedy: ";
     greedy = new GreedyWeight(graph, startVertex);
     printOrder(graph, greedy->getVertexOrder(), greedy->getTotalWeight());
     delete greedy;
+    cout << "OK\n";
+    getchar();
 
+    cout << "> Christofides: ";
     christofides = new Christofides(graph, startVertex);
-    cout << "Christofides: ";
     printOrder(graph, christofides->getVertexOrder(), christofides->getTotalWeight());
     delete christofides;
+    cout << "OK\n";
+    getchar();
 
+    cout << "> PSO (p = 100, i = 200): ";
+    smallPSO = new ParticleSwarm(graph, startVertex, 100, 200);
+    printOrder(graph, smallPSO->getVertexOrder(), smallPSO->getTotalWeight());
+    delete smallPSO;
+    cout << "OK\n";
+    getchar();
+
+    cout << "> PSO (p = 500, i = 10000): ";
+    bigPSO = new ParticleSwarm(graph, startVertex, 500, 10000);
+    printOrder(graph, bigPSO->getVertexOrder(), bigPSO->getTotalWeight());
+    delete bigPSO;
+    cout << "OK\n";
+    getchar();
+
+    cout << "> Minimum-Limited ZDD: ";
     zh = new LimitedZddHamilton(graph, startVertex, 0);
-    cout << "Minimum-Limited ZDD: ";
     printOrder(graph, zh->getVertexOrder(), zh->getTotalWeight());
     delete zh;
+    cout << "OK\n";
+    getchar();
 
+    cout << "> Christofides-Based Minimum-Limited ZDD: ";
     czh = new ChristofidesZh(graph, startVertex);
-    cout << "Christofides-Based Minimum-Limited ZDD: ";
     printOrder(graph, czh->getVertexOrder(), czh->getTotalWeight());
     delete czh;
+    cout << "OK\n";
+    getchar();
 
     delete graph;
 
     //
 
     getchar();
+
+    //
 
     graph = new Graph(9, "abcdefghi");
     graph->addEdgeByName("a", "b", 2)
@@ -292,25 +324,47 @@ void testVersus() {
             ->addEdgeByName("h", "d", 8);
     startVertex = graph->vertexValue("f");
 
-    cout << "Greedy: ";
+    cout << "> Greedy: ";
     greedy = new GreedyWeight(graph, startVertex);
     printOrder(graph, greedy->getVertexOrder(), greedy->getTotalWeight());
     delete greedy;
+    cout << "OK\n";
+    getchar();
 
+    cout << "> Christofides: ";
     christofides = new Christofides(graph, startVertex);
-    cout << "Christofides: ";
     printOrder(graph, christofides->getVertexOrder(), christofides->getTotalWeight());
     delete christofides;
+    cout << "OK\n";
+    getchar();
 
+    cout << "> PSO (p = 100, i = 200): ";
+    smallPSO = new ParticleSwarm(graph, startVertex, 100, 200);
+    printOrder(graph, smallPSO->getVertexOrder(), smallPSO->getTotalWeight());
+    delete smallPSO;
+    cout << "OK\n";
+    getchar();
+
+    cout << "> PSO (p = 500, i = 10000): ";
+    bigPSO = new ParticleSwarm(graph, startVertex, 500, 10000);
+    printOrder(graph, bigPSO->getVertexOrder(), bigPSO->getTotalWeight());
+    delete bigPSO;
+    cout << "OK\n";
+    getchar();
+
+    cout << "> Minimum-Limited ZDD: ";
     zh = new LimitedZddHamilton(graph, startVertex, 0);
-    cout << "Minimum-Limited ZDD: ";
     printOrder(graph, zh->getVertexOrder(), zh->getTotalWeight());
     delete zh;
+    cout << "OK\n";
+    getchar();
 
+    cout << "> Christofides-Based Minimum-Limited ZDD: ";
     czh = new ChristofidesZh(graph, startVertex);
-    cout << "Christofides-Based Minimum-Limited ZDD: ";
     printOrder(graph, czh->getVertexOrder(), czh->getTotalWeight());
     delete czh;
+    cout << "OK\n";
+    getchar();
 
     delete graph;
 }
@@ -362,4 +416,33 @@ void testLimitedZdd() {
 
     delete graph;
     delete zh;
+}
+
+void testPSO() {
+    Graph* graph;
+    ParticleSwarm* pso;
+    int startVertex;
+
+    graph = new Graph(9, "abcdefghi");
+    graph->addEdgeByName("a", "b", 2)
+            ->addEdgeByName("b", "c", 4)
+            ->addEdgeByName("c", "d", 2)
+            ->addEdgeByName("d", "e", 1)
+            ->addEdgeByName("e", "f", 6)
+            ->addEdgeByName("f", "a", 7)
+            ->addEdgeByName("a", "g", 3)
+            ->addEdgeByName("b", "g", 6)
+            ->addEdgeByName("g", "i", 1)
+            ->addEdgeByName("g", "h", 3)
+            ->addEdgeByName("f", "i", 5)
+            ->addEdgeByName("i", "h", 4)
+            ->addEdgeByName("h", "c", 2)
+            ->addEdgeByName("i", "e", 2)
+            ->addEdgeByName("h", "d", 8);
+    startVertex = graph->vertexValue("f");
+    pso = new ParticleSwarm(graph, startVertex, 500, 1000);
+    printOrder(graph, pso->getVertexOrder(), pso->getTotalWeight());
+
+    delete graph;
+    delete pso;
 }
