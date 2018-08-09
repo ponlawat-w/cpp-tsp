@@ -19,6 +19,7 @@ namespace TSP::PSO {
         int particleSize;
 
         int bestWeight;
+        vector<int> bestVertexOrder;
         Particle* particleThatContainsBestWeight;
 
         mt19937 generator;
@@ -42,6 +43,7 @@ namespace TSP::PSO {
         void calculate();
 
         int getTotalWeight();
+        int getTotalWeight(vector<int>);
         vector<int> getVertexOrder();
 
         double randomDouble();

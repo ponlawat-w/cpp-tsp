@@ -14,7 +14,7 @@ namespace TSP::Algorithm {
         int** adjacency = graph->getAdjacencyMatrix();
         int size = graph->getVertices();
 
-        int currentVertex = this->vertexOrder.front();
+        int currentVertex = *this->vertexOrder.begin();
         while (!this->calculatedAllVertices(size) && currentVertex > -1) {
             int nextVertex = this->getNextVertexFrom(currentVertex, adjacency, size);
             if (nextVertex < 0) {
@@ -25,9 +25,10 @@ namespace TSP::Algorithm {
             currentVertex = nextVertex;
         }
         this->totalWeight += adjacency[currentVertex][this->vertexOrder.front()];
-        this->vertexOrder.push_back(this->vertexOrder.front());
+        this->vertexOrder.push_back(*this->vertexOrder.begin());
 
         graph->deallocateAdjacencyMatrix(adjacency);
+        delete graph;
     }
 
     bool GreedyWeight::vertexIsCalculated(int v) {

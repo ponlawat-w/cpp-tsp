@@ -3,7 +3,7 @@
 namespace TSP::FrontierZDD {
 
     LimitedZddHamilton::LimitedZddHamilton(Graph* graph, int startVertex, int minimumWeight)
-            : FrontierMap(graph->makeCompleteGraph()) {
+            : FrontierMap(graph, true) {
         this->startVertex = startVertex;
         this->bestWeight = minimumWeight;
         if (this->bestWeight < 1) {

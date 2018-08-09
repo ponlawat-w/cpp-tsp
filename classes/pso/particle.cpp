@@ -1,4 +1,5 @@
 #include "particle.hpp"
+#include "pso.hpp"
 
 namespace TSP::PSO {
 
@@ -42,17 +43,29 @@ namespace TSP::PSO {
         }
     }
 
-    void Particle::updateBest(int** adjacency) {
+    vector<int> Particle::updateBest(int globalBest, int** adjacency) {
         this->weight = this->getTotalWeight(this->vertices, adjacency);
 
         if (this->weight < 0) {
-            return;
+            return vector<int> {};
         }
 
         if (this->bestWeight < 0 || this->weight < this->bestWeight) {
             this->bestWeight = this->weight;
             this->copyVertexPsToPositions(this->vertices, this->bestPositions);
+
+            if (globalBest < 0 || this->bestWeight < globalBest) {
+                vector<int> order;
+                for (int i = 0; i < this->size; i++) {
+                    VertexP* vp = this->vertices[i];
+                    order.push_back(vp->vertex);
+                }
+                order.push_back(*order.begin());
+                return order;
+            }
         }
+
+        return vector<int> {};
     }
 
     int Particle::getTotalWeight(VertexP** vertices, int** adjacency) {
@@ -75,8 +88,8 @@ namespace TSP::PSO {
     }
 
     void Particle::copyVertexPsToPositions(VertexP** from, double* to) {
-        for (int v = 0; v < this->size; v++) {
-            VertexP* vP = from[v];
+        for (int i = 0; i < this->size; i++) {
+            VertexP* vP = from[i];
             to[vP->vertex] = vP->position;
         }
     }
@@ -104,6 +117,7 @@ namespace TSP::PSO {
         sort(bestVp, bestVp + this->size, VertexP::pointerComparePositionAscending);
 
         vector<int> vertexOrder = vector<int> {bestVp[0]->vertex};
+        delete bestVp[0];
         for (int i = 1; i < this->size; i++) {
             vertexOrder.push_back(bestVp[i]->vertex);
             delete bestVp[i];

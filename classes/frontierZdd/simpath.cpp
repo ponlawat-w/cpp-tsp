@@ -11,7 +11,7 @@ namespace TSP::FrontierZDD {
         return (verA1 == verB1) ? verA2 > verB2 : verA1 > verB1;
     }
 
-    Simpath::Simpath(Graph* graph, int origin, int destination): FrontierMap(graph) {
+    Simpath::Simpath(Graph* graph, int origin, int destination): FrontierMap(graph, false) {
         sort(this->edges, this->edges + this->edgeSize, compareEdges);
         this->generateFrontiers();
 

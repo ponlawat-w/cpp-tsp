@@ -2,8 +2,8 @@
 
 namespace TSP::FrontierZDD {
 
-    FrontierMap::FrontierMap(Graph* graph) {
-        this->graph = graph->clone();
+    FrontierMap::FrontierMap(Graph* graph, bool induced) {
+        this->graph = induced ? graph->clone()->makeCompleteGraph() : graph->clone();
 
         set<Edge*> edgeSet = this->graph->getEdgeSet();
         this->edges = this->edgeSetToArray(edgeSet);

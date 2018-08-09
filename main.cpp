@@ -25,34 +25,36 @@ void testPerfectMatching();
 void testEulerCircuit();
 void testChristofides();
 void testVersus();
+void testBigVersus();
 void testLimitedZdd();
 void testPSO();
 
 int main() {
 
-    cout << "### MINIMUM SPANNING TREE ###" << endl;
-    testSpanningTree();
-    getchar();
-    cout << "### MINIMUM PERFECT MATCHING ###" << endl;
-    testPerfectMatching();
-    getchar();
-    cout << "### EULER CIRCUIT ###" << endl;
-    testEulerCircuit();
-    getchar();
-    cout << "### CHRISTOFIDES ###" << endl;
-    testChristofides();
-    getchar();
-    cout << "### Limited ZDD Hamilton ###" << endl;
-    testLimitedZdd();
-    getchar();
-    cout << "### PSO ###" << endl;
-    testPSO();
-    getchar();
+//    cout << "### MINIMUM SPANNING TREE ###" << endl;
+//    testSpanningTree();
+//    getchar();
+//    cout << "### MINIMUM PERFECT MATCHING ###" << endl;
+//    testPerfectMatching();
+//    getchar();
+//    cout << "### EULER CIRCUIT ###" << endl;
+//    testEulerCircuit();
+//    getchar();
+//    cout << "### CHRISTOFIDES ###" << endl;
+//    testChristofides();
+//    getchar();
+//    cout << "### Limited ZDD Hamilton ###" << endl;
+//    testLimitedZdd();
+//    getchar();
+//    cout << "### PSO ###" << endl;
+//    testPSO();
+//    getchar();
     cout << "### VS ###" << endl;
-    testVersus();
-    getchar();
-    cout << "### SIMPATH ###" << endl;
-    testSimpath();
+//    testVersus();
+    testBigVersus();
+//    getchar();
+//    cout << "### SIMPATH ###" << endl;
+//    testSimpath();
 
     cout << "Terminates" << endl;
 
@@ -356,6 +358,60 @@ void testVersus() {
     zh = new LimitedZddHamilton(graph, startVertex, 0);
     printOrder(graph, zh->getVertexOrder(), zh->getTotalWeight());
     delete zh;
+    cout << "OK\n";
+    getchar();
+
+    cout << "> Christofides-Based Minimum-Limited ZDD: ";
+    czh = new ChristofidesZh(graph, startVertex);
+    printOrder(graph, czh->getVertexOrder(), czh->getTotalWeight());
+    delete czh;
+    cout << "OK\n";
+    getchar();
+
+    delete graph;
+}
+
+void testBigVersus() {
+
+    Graph* graph;
+    GreedyWeight* greedy;
+    Christofides* christofides;
+    ChristofidesZh* czh;
+    ParticleSwarm* smallPSO;
+    ParticleSwarm* bigPSO;
+    int startVertex;
+
+    graph = new Graph(25);
+    graph->addEdge(19, 0, 5)->addEdge(17, 0, 5)->addEdge(10, 0, 4)->addEdge(14, 0, 4)->addEdge(1, 0, 4)->addEdge(9, 0, 3)->addEdge(16, 0, 3)->addEdge(8, 0, 2)->addEdge(21, 0, 2)->addEdge(3, 0, 2)->addEdge(19, 1, 10)->addEdge(8, 1, 8)->addEdge(21, 1, 8)->addEdge(9, 1, 8)->addEdge(16, 1, 7)->addEdge(22, 1, 7)->addEdge(3, 1, 7)->addEdge(7, 1, 5)->addEdge(23, 1, 4)->addEdge(18, 1, 4)->addEdge(6, 1, 4)->addEdge(10, 1, 4)->addEdge(14, 1, 3)->addEdge(4, 1, 1)->addEdge(24, 1, 1)->addEdge(20, 1, 1)->addEdge(1, 13, 2)->addEdge(1, 12, 2)->addEdge(1, 15, 1)->addEdge(1, 2, 1)->addEdge(1, 17, 1)->addEdge(4, 2, 8)->addEdge(5, 2, 7)->addEdge(20, 2, 3)->addEdge(23, 2, 3)->addEdge(12, 2, 3)->addEdge(6, 2, 2)->addEdge(18, 2, 1)->addEdge(11, 2, 1)->addEdge(9, 2, 1)->addEdge(7, 2, 1)->addEdge(10, 2, 1)->addEdge(22, 3, 7)->addEdge(24, 3, 6)->addEdge(8, 3, 6)->addEdge(16, 3, 5)->addEdge(15, 3, 5)->addEdge(21, 3, 2)->addEdge(20, 3, 2)->addEdge(10, 3, 2)->addEdge(9, 3, 1)->addEdge(10, 4, 10)->addEdge(12, 4, 8)->addEdge(18, 4, 8)->addEdge(5, 4, 5)->addEdge(23, 4, 4)->addEdge(11, 4, 4)->addEdge(21, 4, 1)->addEdge(7, 4, 1)->addEdge(18, 5, 6)->addEdge(10, 5, 6)->addEdge(11, 5, 5)->addEdge(24, 5, 5)->addEdge(14, 5, 3)->addEdge(7, 5, 3)->addEdge(6, 5, 2)->addEdge(23, 5, 2)->addEdge(19, 5, 2)->addEdge(15, 5, 1)->addEdge(10, 6, 5)->addEdge(24, 6, 4)->addEdge(7, 6, 4)->addEdge(12, 6, 2)->addEdge(20, 6, 2)->addEdge(23, 6, 2)->addEdge(18, 6, 1)->addEdge(21, 6, 1)->addEdge(24, 7, 4)->addEdge(18, 7, 3)->addEdge(12, 7, 3)->addEdge(9, 7, 2)->addEdge(20, 7, 2)->addEdge(10, 7, 1)->addEdge(7, 23, 1)->addEdge(13, 8, 10)->addEdge(10, 8, 10)->addEdge(19, 8, 9)->addEdge(21, 8, 8)->addEdge(23, 8, 7)->addEdge(16, 8, 5)->addEdge(20, 8, 3)->addEdge(14, 8, 1)->addEdge(18, 8, 1)->addEdge(10, 9, 5)->addEdge(21, 9, 3)->addEdge(24, 9, 3)->addEdge(16, 9, 3)->addEdge(23, 9, 2)->addEdge(14, 9, 10)->addEdge(20, 10, 10)->addEdge(13, 10, 5)->addEdge(16, 10, 5)->addEdge(19, 10, 4)->addEdge(21, 10, 4)->addEdge(11, 10, 3)->addEdge(24, 10, 3)->addEdge(12, 10, 2)->addEdge(17, 10, 1)->addEdge(23, 10, 1)->addEdge(14, 10, 1)->addEdge(18, 10, 5)->addEdge(18, 11, 7)->addEdge(20, 11, 2)->addEdge(20, 12, 8)->addEdge(23, 12, 5)->addEdge(21, 12, 1)->addEdge(14, 12, 1)->addEdge(24, 12, 1)->addEdge(12, 19, 3)->addEdge(19, 13, 8)->addEdge(21, 13, 8)->addEdge(23, 13, 6)->addEdge(15, 13, 5)->addEdge(16, 13, 3)->addEdge(14, 13, 10)->addEdge(19, 14, 6)->addEdge(23, 14, 5)->addEdge(16, 14, 5)->addEdge(21, 14, 2)->addEdge(18, 14, 1)->addEdge(22, 15, 3)->addEdge(24, 15, 1)->addEdge(20, 15, 1)->addEdge(21, 16, 5)->addEdge(19, 16, 4)->addEdge(20, 16, 3)->addEdge(23, 18, 5)->addEdge(21, 18, 3)->addEdge(21, 19, 9)->addEdge(24, 20, 10)->addEdge(21, 20, 2)->addEdge(23, 21, 6)->addEdge(21, 22, 8)->addEdge(24, 23, 2);
+    startVertex = 0;
+
+    printGraph(graph);
+
+    cout << "> Greedy: ";
+    greedy = new GreedyWeight(graph, startVertex);
+    printOrder(graph, greedy->getVertexOrder(), greedy->getTotalWeight());
+    delete greedy;
+    cout << "OK\n";
+    getchar();
+
+    cout << "> Christofides: ";
+    christofides = new Christofides(graph, startVertex);
+    printOrder(graph, christofides->getVertexOrder(), christofides->getTotalWeight());
+    delete christofides;
+    cout << "OK\n";
+    getchar();
+
+    cout << "> PSO (p = 100, i = 200): ";
+    smallPSO = new ParticleSwarm(graph, startVertex, 100, 200);
+    printOrder(graph, smallPSO->getVertexOrder(), smallPSO->getTotalWeight());
+    delete smallPSO;
+    cout << "OK\n";
+    getchar();
+
+    cout << "> PSO (p = 1000, i = 1000): ";
+    bigPSO = new ParticleSwarm(graph, startVertex, 1000, 1000);
+    printOrder(graph, bigPSO->getVertexOrder(), bigPSO->getTotalWeight());
+    delete bigPSO;
     cout << "OK\n";
     getchar();
 

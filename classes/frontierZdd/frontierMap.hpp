@@ -27,7 +27,7 @@ namespace TSP::FrontierZDD {
         bool vertexIsFinished(int vertex, int edgeIndex);
 
     public:
-        explicit FrontierMap(Graph*);
+        explicit FrontierMap(Graph*, bool);
         virtual ~FrontierMap();
 
         void printFrontiers();

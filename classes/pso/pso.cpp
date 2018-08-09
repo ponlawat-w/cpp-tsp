@@ -76,18 +76,19 @@ namespace TSP::PSO {
             particle->move(this->startVertex);
 
             delete[] positions;
-
-            particle->updateBest(this->adjacency);
-
             this->applyBest(particle);
         }
     }
 
     void ParticleSwarm::applyBest(Particle* particle) {
-        int particleBestWeight = particle->getBestValue();
-        if (this->bestWeight < 0 || particleBestWeight < this->bestWeight) {
-            this->bestWeight = particleBestWeight;
-            this->particleThatContainsBestWeight = particle;
+        vector<int> newVertexOrder = particle->updateBest(this->bestWeight, this->adjacency);
+        if (!newVertexOrder.empty()) {
+            int particleBestWeight = particle->getBestValue();
+            if (this->bestWeight < 0 || particleBestWeight < this->bestWeight) {
+                this->bestWeight = particleBestWeight;
+                this->bestVertexOrder = newVertexOrder;
+                this->particleThatContainsBestWeight = particle;
+            }
         }
     }
 
@@ -110,7 +111,10 @@ namespace TSP::PSO {
     }
 
     int ParticleSwarm::getTotalWeight() {
-        vector<int> vertexOrder = this->getVertexOrder();
+        return this->getTotalWeight(this->bestVertexOrder);
+    }
+
+    int ParticleSwarm::getTotalWeight(vector<int> vertexOrder) {
         if (vertexOrder.empty()) {
             return -1;
         }

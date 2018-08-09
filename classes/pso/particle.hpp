@@ -26,7 +26,7 @@ namespace TSP::PSO {
         Particle(Graph*, int startVertex, double);
         ~Particle();
         void move(int);
-        void updateBest(int** adjacency);
+        vector<int> updateBest(int globalBest, int** adjacency);
 
         int getTotalWeight(VertexP** positions, int** adjacency);
         void copyVertexPsToPositions(VertexP** from, double* to);
